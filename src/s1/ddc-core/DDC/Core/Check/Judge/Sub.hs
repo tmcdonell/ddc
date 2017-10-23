@@ -96,8 +96,8 @@ makeSub config a ctx0 x0 xL tL tR err
 
  -- SubInstL
  --   Left is an existential.
- | isTExists tL
- = do   ctx1    <- makeInst config a ctx0 tR tL err
+ | Just iL      <- takeExists tL
+ = do   ctx1    <- makeInstL config a ctx0 iL tR err
 
         ctrace  $ vcat
                 [ text "**  Sub_InstL"
@@ -115,8 +115,8 @@ makeSub config a ctx0 x0 xL tL tR err
 
  -- SubInstR
  --   Right is an existential.
- | isTExists tR
- = do   ctx1    <- makeInst config a ctx0 tL tR err
+ | Just iR      <- takeExists tR
+ = do   ctx1    <- makeInstR config a ctx0 tL iR err
 
         ctrace  $ vcat
                 [ text "**  Sub_InstR"
@@ -417,7 +417,7 @@ makeSub config a ctx0 x0 xL tL tR err
         -- so that the existential is instantiated
         -- to match the left.
         let (ctx1, pos1)  =  markContext ctx0
-        let ctx2          =  pushType bParamR ctx1
+        let ctx2          =  pushKind bParamR RoleConcrete ctx1
 
         (xL2, eff2, ctx3) <- makeSub config a ctx2 x0 xL tL tBodyR' err
 

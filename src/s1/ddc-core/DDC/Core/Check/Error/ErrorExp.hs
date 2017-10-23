@@ -1,4 +1,4 @@
-
+{-# OPTIONS_HADDOCK hide #-}
 module DDC.Core.Check.Error.ErrorExp
         (Error(..))
 where
@@ -306,6 +306,14 @@ data Error a n
         -- Witnesses --------------------------------------
         -- | Found a naked `XWitness` that wasn't the argument of an application.
         | ErrorNakedWitness
+        { errorAnnot            :: a
+        , errorChecking         :: Exp a n }
+
+        -- Post check errors ------------------------------
+        | ErrorAmbiguousType
+        { errorAnnot            :: a }
+
+        | ErrorAmbiguousTypeExp
         { errorAnnot            :: a
         , errorChecking         :: Exp a n }
         deriving (Show)
